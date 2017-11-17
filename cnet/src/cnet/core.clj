@@ -33,6 +33,14 @@
           (mapv #(reduce + %)
                 (* inputs (transpose strengths)))))
 
+(def new-hidden-neurons
+  "hidden neuron values"
+  (layer-activation input-neurons input-hidden-strengths))
+
+(def new-output-neurons
+  "output neuron values"
+  (layer-activation new-hidden-neurons hidden-output-strengths))
+
 (defn -main
   "Implememnting a neural network" ;;http://gigasquidsoftware.com/blog/2013/12/02/neural-networks-in-clojure-with-core-dot-matrix/
   [& args]
@@ -40,6 +48,7 @@
 
 
   (println (layer-activation input-neurons input-hidden-strengths))
+  (println (layer-activation new-hidden-neurons hidden-output-strengths))
 
 
   )
