@@ -8,36 +8,39 @@
 ;; B      2       D
 ;;        3
 
-;;Connection strengths
-;; Input to Hidden => [[A1 A2 A3][B1 B2 B3]]
-;; Hidden to Output => [[1C 1D][2C 2D][3C 3D]]
-
+;; 2 input neurons
   (def input-neurons [1 0])
 
+;; Input to Hidden => [[A1 A2 A3][B1 B2 B3]]
   (def input-hidden-strengths [[0.12 0.2 0.13]
                                [0.01 0.02 0.03]])
 
+;; 3 middle neurons
   (def hidden-neurons [0 0 0])
 
+;; Hidden to Output => [[1C 1D][2C 2D][3C 3D]]
   (def hidden-output-strengths [[0.15 0.16]
                                 [0.02 0.03]
                                 [0.01 0.02]])
 
-  (def activation-fn (fn[x] (Math/tanh x)))
+;; Feed forward
+  (def activation-fn (fn[x] (Math/tanh x))) ;; will output in the range between 1 and -1
 
+;; for calculating errors
   (def dactivation-fn (fn[y] (- 1.0 (* y y))))
 
+;; (Sum of all the inputs to a neuron) x (connection strength)
   (defn layer-activation [inputs strengths]
     "forward propogate the input of a layer"
-    (mapv activation-fn
-          (mapv #(reduce + %)
-                (* inputs (transpose strengths)))))
+    (mapv activation-fn ;;finally, fit to a range of 1 to -1
+          (mapv #(reduce + %);; sum these together
+                (* inputs (transpose strengths)))));; multiply inputs and strengths
 
-(def new-hidden-neurons
+(def new-hidden-neurons ;;work out the new hidden neuron strengths
   "hidden neuron values"
   (layer-activation input-neurons input-hidden-strengths))
 
-(def new-output-neurons
+(def new-output-neurons ;; work out the new output neuron strengths
   "output neuron values"
   (layer-activation new-hidden-neurons hidden-output-strengths))
 
