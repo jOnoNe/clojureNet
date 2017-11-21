@@ -44,6 +44,15 @@
   "output neuron values"
   (layer-activation new-hidden-neurons hidden-output-strengths))
 
+
+(def targets [0 1])
+
+(defn output-deltas [target outputs]
+  "measures the delta errors for the output layer (Desired value - actual value) and multiplying it by the gradient of the activation function"
+  (* (mapv dactivation-fn outputs)
+     (- targets outputs)))
+
+
 (defn -main
   "Implememnting a neural network" ;;http://gigasquidsoftware.com/blog/2013/12/02/neural-networks-in-clojure-with-core-dot-matrix/
   [& args]
@@ -52,6 +61,6 @@
 
   (println (layer-activation input-neurons input-hidden-strengths))
   (println (layer-activation new-hidden-neurons hidden-output-strengths))
-
+  (println (output-deltas targets new-output-neurons))
 
   )
