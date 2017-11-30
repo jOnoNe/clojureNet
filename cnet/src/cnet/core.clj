@@ -52,6 +52,20 @@
   (* (mapv dactivation-fn outputs)
      (- targets outputs)))
 
+;;remember the output deltas for later
+(def odeltas (output-deltas targets new-output-neurons))
+
+;;calculate the errors in the hidden layers
+(defn hlayer-deltas [odeltas neurons strengths]
+  (* (mapv dactivation-fn neurons)
+     (mapv #(reduce + %)
+           (* odeltas strengths))))
+
+;;remember the hidden layer errors for later
+(def hdeltas (hlayer-deltas
+               odeltas
+               new-hidden-neurons
+               hidden-output-strengths))
 
 (defn -main
   "Implememnting a neural network" ;;http://gigasquidsoftware.com/blog/2013/12/02/neural-networks-in-clojure-with-core-dot-matrix/
@@ -59,8 +73,12 @@
   (println "Implementing a neural network based on the tutorial at: http://gigasquidsoftware.com/blog/2013/12/02/neural-networks-in-clojure-with-core-dot-matrix/")
 
 
-  (println (layer-activation input-neurons input-hidden-strengths))
-  (println (layer-activation new-hidden-neurons hidden-output-strengths))
+  ;;(println (layer-activation input-neurons input-hidden-strengths))
+  ;;(println (layer-activation new-hidden-neurons hidden-output-strengths))
   (println (output-deltas targets new-output-neurons))
+  (println (hlayer-deltas
+      odeltas
+      new-hidden-neurons hidden-output-strengths))
 
-  )
+
+           )
